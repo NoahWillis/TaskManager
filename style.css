@@ -10,10 +10,9 @@ html, body {
   height: 100vh;
   margin: 0;
   padding: 0;
-  overflow: hidden; 
   font-family: "Montserrat", sans-serif;
-  background-color: #121212; /* dark background */
-  color: #e0e0e0; /* light text */
+  background-color: #121212; 
+  color: #e0e0e0; 
   line-height: 1.6;
 }
 
@@ -66,14 +65,14 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  height: 100%; /* added for scroll */
+  height: 100%; 
   border: 1px solid transparent;
   overflow: hidden; 
 }
 
 .section-header {
     font-size: 1.5rem;
-    color: #8ab4f8; /* lighter blue for dark */
+    color: #8ab4f8; 
     margin-bottom: 20px;
     text-align: center;
     font-weight: 600;
@@ -138,14 +137,8 @@ body {
 
 .controls-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 15px;
-}
-
-@media (min-width: 768px) {
-    .controls-container {
-        flex-direction: row;
-    }
 }
 
 .add-btn {
@@ -187,15 +180,29 @@ body {
     margin-bottom: 30px;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 768px) {
     .works-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    html, body {
+      height: 100%;
+      overflow-y: auto; 
+    }
+
+    .works-list {
+      overflow-y: hidden;
+    }
+
 }
 
 @media (min-width: 1024px) {
     .works-grid {
         grid-template-columns: repeat(3, 1fr);
+    }
+
+    .works-list {
+      overflow-y: auto;
     }
 
 }

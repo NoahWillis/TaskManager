@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   let projects = JSON.parse(localStorage.getItem("projects")) || [];
   let currentProjectId = localStorage.getItem("currentProjectId");
+  const savedScrollSetting = localStorage.getItem("scrollEnabled");
 
   const backBtn = document.getElementById("backToDashboardBtn");
   const workForm = document.getElementById("workForm");
@@ -24,6 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
   const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 
+  const openSettingsBtn = document.getElementById("openSettingsBtn");
+  const closeSettingsBtn = document.getElementById("closeSettingsBtn");
+  const settingsModal = document.getElementById("settingsModal");
+  const scrollToggle = document.getElementById("scrollToggleCheckbox");
+
+
   let deleteTarget = null;
   let editingTaskIndex = null;
 
@@ -31,6 +38,50 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!proj) return window.location.href = "dashboard.html";
 
   boardTitle.textContent = proj.name;
+
+   openSettingsBtn.addEventListener("click", () => {
+    settingsModal.classList.add("active");
+  });
+
+  closeSettingsBtn.addEventListener("click", () => {
+    settingsModal.classList.remove("active");
+  });
+
+      if (savedScrollSetting === "true") {
+      enablePageScroll();
+      scrollToggle.checked = true;
+    } else {
+      disablePageScroll();
+      scrollToggle.checked = false;
+    }
+
+    scrollToggle.addEventListener("change", (e) => {
+      const isEnabled = e.target.checked;
+      localStorage.setItem("scrollEnabled", isEnabled);
+
+      if (isEnabled) {
+        enablePageScroll();
+      } else {
+        disablePageScroll();
+      }
+    });
+
+    function enablePageScroll() {
+      document.body.style.height = "auto";
+      document.body.style.overflowY = "auto";
+      document.querySelectorAll(".works-list").forEach(el => {
+        el.style.overflowY = "visible";
+      });
+    }
+
+    function disablePageScroll() {
+      document.body.style.height = "100vh";
+      document.body.style.overflowY = "hidden";
+      document.querySelectorAll(".works-list").forEach(el => {
+        el.style.overflowY = "auto";
+      });
+    }
+
 
   addWorkBtn.onclick = () => openTaskModal();
   closeModelBtn.onclick = () => {

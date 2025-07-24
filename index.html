@@ -20,9 +20,13 @@
         <button id="addWorkBtn" class="add-btn">
           <i class="fas fa-plus"></i> Add Task
         </button>
+        <button id="openSettingsBtn" class="add-btn">
+          <i class="fas fa-cog"></i> Settings
+        </button>
           <button id="deleteProjectBtn" class="delete-project-btn">
             <i class="fas fa-trash"></i> Delete Project
           </button>
+
       </div>
     </div>
 
@@ -70,6 +74,27 @@
                 Delete
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="settingsModal" class="model-overlay">
+      <div class="model">
+        <div class="model-header">
+          <h3 class="model-title">Settings</h3>
+          <button id="closeSettingsBtn" class="model-close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <button id="themeToggleBtn" class="add-btn">Toggle Theme (Coming Soon)</button>
+
+          <div style="margin-top: 20px;">
+            <label style="display: flex; align-items: center; gap: 10px;">
+              <input type="checkbox" id="scrollToggleCheckbox" />
+              Enable Page Scrolling (Mobile Only)
+            </label>
           </div>
         </div>
       </div>

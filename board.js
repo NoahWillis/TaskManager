@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (idx !== null) {
       const t = proj.tasks[idx];
       workTitle.value = t.title;
-      workContent.value = t.content;
+      workContent.innerHTML = t.content;
       workStatus.value = t.status;
       workDueDate.value = t.dueDate;
       document.querySelector(".model-title").textContent = "Edit Task";

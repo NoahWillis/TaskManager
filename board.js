@@ -30,9 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const settingsModal = document.getElementById("settingsModal");
   const scrollToggle = document.getElementById("scrollToggleCheckbox");
 
-  // Undo/Redo buttons (make sure these exist in your HTML)
   const undoBtn = document.getElementById("undoBtn");
   const redoBtn = document.getElementById("redoBtn");
+
+  const colorPicker = document.getElementById("colorPicker");
+  const colorButton = document.getElementById('colorPickerBtn');
 
   let deleteTarget = null;
   let editingTaskIndex = null;
@@ -42,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   boardTitle.textContent = proj.name;
 
-  // Undo/Redo history stacks
   let history = [];
   let future = [];
 
@@ -123,6 +124,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  colorPicker.addEventListener("input", () => {
+    const selectedColor = colorPicker.value;
+    document.execCommand("foreColor", false, selectedColor);
+  });
+
   addWorkBtn.onclick = () => openTaskModal();
   closeModelBtn.onclick = () => {
     taskModal.classList.remove("active");
@@ -156,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const task = {
       title: workTitle.value.trim(),
-      content: workContent.value.trim(),
+      content: workContent.innerHTML.trim(),
       status: workStatus.value,
       dueDate: workDueDate.value,
       date: new Date().toISOString()

@@ -91,10 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelector(".submit-btn").textContent = "Save Task";
 
     } else {
+      workForm.reset();
       document.querySelector(".model-title").textContent = "New Task";
 
       document.querySelector(".submit-btn").textContent = "Create Task";
-      workForm.reset();
     }
     taskModal.classList.add("active");
     document.body.style.overflow = "hidden";
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       localStorage.setItem("projects", JSON.stringify(projects));
 
-      renderTasks();
+      saveAndRender();
     }
   };
 

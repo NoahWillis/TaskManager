@@ -201,6 +201,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       localStorage.setItem("projects", JSON.stringify(projects));
+
+      renderTasks();
     }
   };
 

@@ -30,6 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const settingsModal = document.getElementById("settingsModal");
   const scrollToggle = document.getElementById("scrollToggleCheckbox");
 
+  // Undo/Redo buttons (make sure these exist in your HTML)
+  const undoBtn = document.getElementById("undoBtn");
+  const redoBtn = document.getElementById("redoBtn");
 
   let deleteTarget = null;
   let editingTaskIndex = null;
@@ -39,7 +42,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
   boardTitle.textContent = proj.name;
 
-   openSettingsBtn.addEventListener("click", () => {
+  // Undo/Redo history stacks
+  let history = [];
+  let future = [];
+
+  function saveHistory() {
+    history.push(JSON.stringify(proj.tasks));
+    if (history.length > 50) history.shift(); // limit history size
+    future = []; // clear redo stack on new action
+  }
+
+  function undo() {
+    if (history.length === 0) return;
+    future.push(JSON.stringify(proj.tasks));
+    proj.tasks = JSON.parse(history.pop());
+    saveAndRender();
+  }
+
+  function redo() {
+    if (future.length === 0) return;
+    history.push(JSON.stringify(proj.tasks));
+    proj.tasks = JSON.parse(future.pop());
+    saveAndRender();
+  }
+
+  undoBtn?.addEventListener("click", undo);
+  redoBtn?.addEventListener("click", redo);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.key.toLowerCase() === "z") {
+      e.preventDefault();
+      undo();
+    }
+    if (e.ctrlKey && e.key.toLowerCase() === "y") {
+      e.preventDefault();
+      redo();
+    }
+  });
+
+  openSettingsBtn.addEventListener("click", () => {
     settingsModal.classList.add("active");
   });
 
@@ -47,41 +88,40 @@ document.addEventListener("DOMContentLoaded", () => {
     settingsModal.classList.remove("active");
   });
 
-      if (savedScrollSetting === "true") {
+  if (savedScrollSetting === "true") {
+    enablePageScroll();
+    scrollToggle.checked = true;
+  } else {
+    disablePageScroll();
+    scrollToggle.checked = false;
+  }
+
+  scrollToggle.addEventListener("change", (e) => {
+    const isEnabled = e.target.checked;
+    localStorage.setItem("scrollEnabled", isEnabled);
+
+    if (isEnabled) {
       enablePageScroll();
-      scrollToggle.checked = true;
     } else {
       disablePageScroll();
-      scrollToggle.checked = false;
     }
+  });
 
-    scrollToggle.addEventListener("change", (e) => {
-      const isEnabled = e.target.checked;
-      localStorage.setItem("scrollEnabled", isEnabled);
-
-      if (isEnabled) {
-        enablePageScroll();
-      } else {
-        disablePageScroll();
-      }
+  function enablePageScroll() {
+    document.body.style.height = "auto";
+    document.body.style.overflowY = "auto";
+    document.querySelectorAll(".works-list").forEach(el => {
+      el.style.overflowY = "visible";
     });
+  }
 
-    function enablePageScroll() {
-      document.body.style.height = "auto";
-      document.body.style.overflowY = "auto";
-      document.querySelectorAll(".works-list").forEach(el => {
-        el.style.overflowY = "visible";
-      });
-    }
-
-    function disablePageScroll() {
-      document.body.style.height = "100vh";
-      document.body.style.overflowY = "hidden";
-      document.querySelectorAll(".works-list").forEach(el => {
-        el.style.overflowY = "auto";
-      });
-    }
-
+  function disablePageScroll() {
+    document.body.style.height = "100vh";
+    document.body.style.overflowY = "hidden";
+    document.querySelectorAll(".works-list").forEach(el => {
+      el.style.overflowY = "auto";
+    });
+  }
 
   addWorkBtn.onclick = () => openTaskModal();
   closeModelBtn.onclick = () => {
@@ -105,6 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "dashboard.html";
     }
     else if (deleteTarget && typeof deleteTarget.taskIndex === "number") {
+      saveHistory(); // Save before deleting
       proj.tasks.splice(deleteTarget.taskIndex, 1);
       saveAndRender();
       closeConfirmModal();
@@ -120,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
       dueDate: workDueDate.value,
       date: new Date().toISOString()
     };
+    saveHistory(); // Save before adding or editing
     if (editingTaskIndex == null) proj.tasks.unshift(task);
     else proj.tasks[editingTaskIndex] = task;
 
@@ -161,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
     proj.tasks.forEach((work, index) => {
       const card = document.createElement("div");
       card.className = "work-card";
-      card.setAttribute("data-task-id", work.date); 
+      card.setAttribute("data-task-id", work.date);
       card.innerHTML = `
         <div class="work-content">
           <div class="work-header">
@@ -238,12 +280,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const taskIndex = proj.tasks.findIndex(t => t.date === taskId);
       if (taskIndex === -1) return;
 
+      saveHistory(); // Save before rearranging tasks
+
       const task = proj.tasks[taskIndex];
       task.status = newStatus;
 
-      proj.tasks.splice(taskIndex, 1); 
+      proj.tasks.splice(taskIndex, 1);
       const newIndex = Array.from(e.to.children).indexOf(draggedEl);
-      proj.tasks.splice(newIndex, 0, task); 
+      proj.tasks.splice(newIndex, 0, task);
 
       const badge = draggedEl.querySelector(".status-badge");
       if (badge) {

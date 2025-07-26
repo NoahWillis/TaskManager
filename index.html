@@ -52,8 +52,9 @@
       <div class="model-header">
         <h3 class="model-title">New Task</h3>
           <div class="toolbar">
-            <button type="button" onclick="document.execCommand('bold', false, null)">B</button>
-            <button type="button" onclick="document.execCommand('italic', false, null)">I</button>
+            <button type="button" onclick="document.execCommand('bold', false, null)"> <b>B</b></button>
+            <button type="button" onclick="document.execCommand('italic', false, null)"><i>I</i></button>
+            <button id="bulletBtn" type="button"><i class="fas fa-list-ul"></i></button>
             <input type="color" id="colorPicker" />
           </div>
         <button id="closeModelBtn" class="model-close"><i class="fas fa-times"></i></button>

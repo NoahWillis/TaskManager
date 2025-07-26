@@ -81,6 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  document.getElementById("bulletBtn").addEventListener("click", () => {
+    document.execCommand("insertUnorderedList");
+  });
+
   openSettingsBtn.addEventListener("click", () => {
     settingsModal.classList.add("active");
   });
@@ -162,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const task = {
       title: workTitle.value.trim(),
-      content: workContent.innerHTML.trim(),
+      content: workContent.innerHTML,
       status: workStatus.value,
       dueDate: workDueDate.value,
       date: new Date().toISOString()
@@ -191,6 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } else {
       workForm.reset();
+      workContent.innerHTML = "";
       document.querySelector(".model-title").textContent = "New Task";
 
       document.querySelector(".submit-btn").textContent = "Create Task";
